@@ -125,3 +125,91 @@ ssh -i .ssh/MyKpCli.pem ec2-user@52.62.76.47
 ```
 whoami
 ```
+
+###### Step 4: Create IAM resources like User, Group, Policy using the AWS CLI.
+
+1-List all users under the current aws account
+
+```
+aws iam list-users
+```
+
+2-List all groups under the current aws account
+
+```
+aws iam list-groups
+```
+
+3-Create a new group under the current aws account
+
+```
+aws iam create-group --group-name mygroup
+```
+
+4-Create a new user under the current aws account
+
+```
+aws iam create-user --group-name myuser
+```
+
+5-Add a new user into a group
+
+```
+aws iam add-user-to-group --user-name myuser --group-name mygroup
+```
+
+6-Check the account ID of a user
+
+```
+aws iam get-user --user-name myuser
+```
+
+7-Check the details of a group
+
+```
+aws iam get-group --group-name mygroup
+8-Assign a policy to a group by attached policy arn (arn stands for amazon resource name, which is a unique id)
+```
+
+aws iam attach-group-policy --group-name mygroup --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess
+
+```
+9-Check the policies of a group
+```
+
+aws iam list-attached-group-policies --group-name mygroup
+
+```
+10-Get a policy arn by policy name
+```
+
+aws iam list-policies --query 'Policies[?PolicyName==`AmazonEC2FullAccess`].{ARN:arn}` --output text
+
+```
+###### Step 5: Create the password, access ID and secret access key for a new user
+1-Create the password for a new user
+```
+
+aws iam create-login-profile --user-name myuser --password {pwd} --password-reset-required
+
+```
+2-Create the access ID and secret access key for a new user
+```
+
+```
+aws iam create-access-key --user-name myuser
+```
+
+###### Step 6: Create a new policy
+
+1-Create a json file under the current user folder via vim and paste the policy into the json file
+
+```
+vim changePasswordPolicy.json
+```
+
+![image](image/Screenshot%202023-02-28%20at%203.06.54%20pm.png)
+
+```
+aws iam create-policy --policy-name changePasswordPolicy --policy-document file://changePasswordPolicy.json
+```
